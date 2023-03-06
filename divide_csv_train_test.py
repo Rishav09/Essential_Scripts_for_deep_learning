@@ -38,7 +38,7 @@ def split_equal_into_val_test(args):
     df_input = pd.read_csv(args.csv_file, engine='python').iloc[:, :]
     split_train_file_name, split_train_file_extension = os.path.splitext(args.saved_train_file) # noqa
     split_valid_file_name, split_valid_file_extension = os.path.splitext(args.saved_valid_file) # noqa
-    split_test_file_name, split_valid_file_extension = os.path.splitext(args.saved_test_file) # noqa
+    split_test_file_name, split_test_file_extension = os.path.splitext(args.saved_test_file) # noqa
 
     if args.frac_train + args.frac_val + args.frac_test != 1.0:
         raise ValueError('fractions %f, %f, %f do not add up to 1.0' %
@@ -50,8 +50,8 @@ def split_equal_into_val_test(args):
 
     # Considering that split is 90% train and rest of it is valid and test.
     # Ugly hack to raise the val size equal to test size
-
-    sfact = int(np.ceil(args.frac_val*len(df_input))/args.no_of_classes)
+    division_Val = args.frac_val + args.frac_test
+    sfact = int(np.ceil(division_Val*len(df_input))/args.no_of_classes)
 
     # Shuffling the data frame
     df_input = df_input.sample(frac=1, random_state=42)
@@ -84,12 +84,12 @@ def split_equal_into_val_test(args):
     assert len(df_input) == len(df_train) + len(df_val)+len(df_test)
     dynamic_train_file_name = f"{split_train_file_name}_{current_time}{split_train_file_extension}" # noqa
     dynamic_valid_file_name = f"{split_valid_file_name}_{current_time}{split_valid_file_extension}" # noqa
-    dynamic_valid_file_name = f"{split_test_file_name}_{current_time}{split_valid_file_extension}" # noqa
+    dynamic_test_file_name = f"{split_test_file_name}_{current_time}{split_test_file_extension}" # noqa
 
     # Currently Change this to pass through create_dataloader file
     df_train.to_csv(dynamic_train_file_name) # noqa
     df_val.to_csv(dynamic_valid_file_name)
-    df_test.to_csv(dynamic_valid_file_name) # noqa
+    df_test.to_csv(dynamic_test_file_name) # noqa
     return df_train, df_val, df_test
 
 

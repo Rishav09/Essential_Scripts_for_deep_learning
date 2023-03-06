@@ -26,7 +26,7 @@ def port_images(args):
     IOError: If there is an error reading the CSV file or moving the files.
     """
     # Check that the CSV file and folder paths are valid
-    df = pd.read_csv(args.csv_file, engine='python').iloc[:,:]
+    df = pd.read_csv(args.csv_file, engine='python').iloc[:, :]
 
     if not os.path.isdir(args.source_folder):
         raise ValueError(f'Invalid source folder path: {args.source_folder}')
